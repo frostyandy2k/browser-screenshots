@@ -1,0 +1,9 @@
+Flystore Screenshots
+
+https://github.com/zeit/pkg/issues/204
+
+# Compile the app like normal
+pkg -t linux --out-path dist index.js
+
+# Copy chromium to the dist folder
+cp -R node_modules/puppeteer/.local-chromium dist/puppeteer

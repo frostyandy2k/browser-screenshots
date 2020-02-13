@@ -1,8 +1,28 @@
+const path = require('path');
 const puppeteer = require('puppeteer');
+
+// Support for pkg
+const executablePath =
+  process.env.PUPPETEER_EXECUTABLE_PATH ||
+  (process.pkg
+    ? path.join(
+        path.dirname(process.execPath),
+        'puppeteer',
+        ...puppeteer
+          .executablePath()
+          .split(path.sep)
+          .slice(6), // /snapshot/project/node_modules/puppeteer/.local-chromium
+      )
+    : puppeteer.executablePath());
+
+if(process.argv.length < 3){
+	console.log("You need to supply the URL as parameter: flyscreen <URL>");
+	process.exit(0);
+}
 
 (async () => {
 	// 1. Launch the browser
-	const browser = await puppeteer.launch({defaultViewport: null});
+	const browser = await puppeteer.launch({executablePath, defaultViewport: null});
 
 	// 2. Open a new page
 	const page = await browser.newPage();
@@ -13,6 +33,7 @@ const puppeteer = require('puppeteer');
 		  width: 400,
 		  height: 2000,
 		  deviceScaleFactor: 1,
+		   // isLandscape: true
 		});
 
   		for (let i = 2; i < process.argv.length; i++) {
@@ -63,7 +84,8 @@ async function takeScreen(page, url){
 	await page.goto(url);
 
 	let resolution = page.viewport().width + 'x' + page.viewport().height;
-	let path = `screenshot-${url}`.replace(/\//g,".") + resolution + '.png';
+	console.log(`Resolution: ${resolution}`);
+	let path = 'screenshots/' + `screenshot-${url}`.replace(/\//g,".") + resolution + '.png';
 	// 4. Take screenshot
 	await page.screenshot({path: path});
 }
