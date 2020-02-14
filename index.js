@@ -1,5 +1,5 @@
 const path = require('path');
-const puppeteer = require('puppeteer');
+const puppeteer = require(process.cwd() + "/node_modules/puppeteer");
 
 // Support for pkg
 const executablePath =
