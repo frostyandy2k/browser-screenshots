@@ -3,7 +3,20 @@ Screenshots Maker
 https://github.com/zeit/pkg/issues/204
 
 # Compile the app like normal
-pkg -t linux --out-path dist index.js
+pkg -t host --out-path dist index.js
 
 # Copy chromium to the dist folder
-cp -R node_modules/puppeteer/.local-chromium dist/puppeteer
+mkdir -p dist/puppeteer/ui/dist/node_modules/puppeteer/
+cp -R node_modules/puppeteer/.local-chromium dist/puppeteer/ui/dist/node_modules/puppeteer/.local-chromium
+
+# Optionally rename index to index.js
+mv dist/index dist/index.js
+
+# Copy puppetter module if you get an error due to the dynamic require and remove chromium
+mkdir -p dist/node_modules/puppeteer
+cp -R node_modules/puppeteer/ dist/node_modules/puppeteer/
+rm -rf dist/node_modules/puppeteer/.local-chromium
+
+# Create output directory
+mkdir dist/screenshots
+
